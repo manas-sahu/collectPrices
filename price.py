@@ -40,62 +40,70 @@ def addPriceToJSON(website, tittle, price, availability):
 #Amazon
 def loadAmazon(data):
     page = requests.get(data["url"], headers=HEADERS)
-    soup = BeautifulSoup(page.content, features="lxml")
-    getPrice = soup.find(id='priceblock_ourprice')
-    if getPrice:
-        price = int(getPrice.get_text().replace(u'₹', u'').replace(u',', u'').strip().split('.')[0])
-    else :
-        price = 0
-    tittle = soup.find(id='productTitle').get_text().strip()
-    availability = soup.find(id='availability').get_text().replace(u'\n', u'').strip()
-    addPriceToJSON(data["website"], tittle, price, availability)
-    printData(data["website"], tittle, price, availability)
+    if page.status_code == 200:
+        soup = BeautifulSoup(page.content, features="lxml")
+        if soup:
+            getPrice = soup.find(id='priceblock_ourprice')
+            if getPrice:
+                price = int(getPrice.get_text().replace(u'₹', u'').replace(u',', u'').strip().split('.')[0])
+            else :
+                price = 0
+            tittle = soup.find(id='productTitle').get_text().strip()
+            availability = soup.find(id='availability').get_text().replace(u'\n', u'').strip()
+            addPriceToJSON(data["website"], tittle, price, availability)
+            printData(data["website"], tittle, price, availability)
 
 #Flipkart
 def loadFlipkart(data):
     page = requests.get(data["url"], headers=HEADERS)
-    soup = BeautifulSoup(page.content, features="lxml")
-    getPrice = soup.find('div', class_="_1vC4OE _3qQ9m1")
-    if getPrice:
-        price = int(getPrice.get_text().replace(u'₹', u'').replace(u',', u'').strip())
-    else :
-        price = 0
-    tittle = soup.find('span', class_="_35KyD6").get_text().replace(u'\xa0', u' ')
-    availability = soup.find('div', class_="_9-sL7L").get_text().strip()
-    addPriceToJSON(data["website"], tittle, price, availability)
-    printData(data["website"], tittle, price, availability)
+    if page.status_code == 200:
+        soup = BeautifulSoup(page.content, features="lxml")
+        if soup:
+            getPrice = soup.find('div', class_="_1vC4OE _3qQ9m1")
+            if getPrice:
+                price = int(getPrice.get_text().replace(u'₹', u'').replace(u',', u'').strip())
+            else :
+                price = 0
+            tittle = soup.find('span', class_="_35KyD6").get_text().replace(u'\xa0', u' ')
+            availability = soup.find('div', class_="_9-sL7L").get_text().strip()
+            addPriceToJSON(data["website"], tittle, price, availability)
+            printData(data["website"], tittle, price, availability)
 
 #Prime abgb
 def loadPrimeAbgb(data):
     page = requests.get(data["url"], headers=HEADERS)
-    soup = BeautifulSoup(page.content, features="lxml")
-    getPrice = soup.find_all('span', class_="woocommerce-Price-amount amount")[2]
-    if getPrice:
-        price = int(getPrice.get_text().replace(u'₹', u'').replace(u',', u'').strip())
-    else :
-        price = 0
-    tittle = soup.find('h1', class_="product_title entry-title").get_text().strip()
-    getAvailability = soup.find('p', class_="stock out-of-stock")
-    if getAvailability:
-        availability = getAvailability.get_text().strip()
-    else :
-        availability = "In Stock"
-    addPriceToJSON(data["website"], tittle, price, availability)
-    printData(data["website"], tittle, price, availability)
+    if page.status_code == 200:
+        soup = BeautifulSoup(page.content, features="lxml")
+        if soup:
+            getPrice = soup.find_all('span', class_="woocommerce-Price-amount amount")[2]
+            if getPrice:
+                price = int(getPrice.get_text().replace(u'₹', u'').replace(u',', u'').strip())
+            else :
+                price = 0
+            tittle = soup.find('h1', class_="product_title entry-title").get_text().strip()
+            getAvailability = soup.find('p', class_="stock out-of-stock")
+            if getAvailability:
+                availability = getAvailability.get_text().strip()
+            else :
+                availability = "In Stock"
+            addPriceToJSON(data["website"], tittle, price, availability)
+            printData(data["website"], tittle, price, availability)
 
 #Prime abgb
 def loadMdComputers(data):
     page = requests.get(data["url"], headers=HEADERS)
-    soup = BeautifulSoup(page.content, features="lxml")
-    getPrice = soup.find('span', class_="price-new")
-    if getPrice:
-        price = int(getPrice.get_text().replace(u'₹', u'').replace(u',', u'').strip())
-    else :
-        price = 0
-    tittle = soup.find('div', class_="title-product").get_text().strip()
-    availability = soup.find('div', class_="stock").get_text().replace(u'Availability:  ', u'').strip()
-    addPriceToJSON(data["website"], tittle, price, availability)
-    printData(data["website"], tittle, price, availability)
+    if page.status_code == 200:
+        soup = BeautifulSoup(page.content, features="lxml")
+        if soup:
+            getPrice = soup.find('span', class_="price-new")
+            if getPrice:
+                price = int(getPrice.get_text().replace(u'₹', u'').replace(u',', u'').strip())
+            else :
+                price = 0
+            tittle = soup.find('div', class_="title-product").get_text().strip()
+            availability = soup.find('div', class_="stock").get_text().replace(u'Availability:  ', u'').strip()
+            addPriceToJSON(data["website"], tittle, price, availability)
+            printData(data["website"], tittle, price, availability)
   
 
 json_data_file = open('productList.json')
