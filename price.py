@@ -1,41 +1,48 @@
 import requests
 from bs4 import BeautifulSoup
 import json
-import datetime
+from iteration_utilities import unique_everseen
+from datetime import datetime
 # https://towardsdatascience.com/scraping-multiple-amazon-stores-with-python-5eab811453a8
 # https://www.youtube.com/watch?v=lwmymf-7NJU
 HEADERS = ({'User-Agent':
             'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36',
             'Accept-Language': 'en-US, en;q=0.5'})
-
 #print Data in console
 def printData(website, tittle, price, availability):
     print (website +'  '+tittle + '  ==>  ' + str(price) + '   ' + availability)
 
 # Creating JSON file
 # function to add to JSON 
-def write_json(data, filename='data.json'): 
+def write_json(data, filename='backupData.json'): 
     with open(filename,'w') as f: 
         json.dump(data, f, indent=4) 
-      
-def addPriceToJSON(website, tittle, price, availability):      
-    with open('data.json') as json_file: 
+def keepUniqueValue():
+    with open('backupData.json') as json_file: 
         data = json.load(json_file) 
-        temp = data['scrappedPrice'] 
-        ts = datetime.datetime.now().isoformat()
+        temp = list(unique_everseen(data['scrappedPrice']))
+        print(temp)
+        write_json(temp, 'data.json')
+        # with open(data.json,'w') as f: 
+        #     json.dump(temp, f, indent=4) 
+        
+def addPriceToJSON(website, tittle, price, availability, url):      
+    with open('backupData.json') as json_file: 
+        data = json.load(json_file) 
+        temp = data['scrappedPrice']
+        ts = datetime.now().strftime("%x")
         # python object to be appended 
         y = {"Website": website,
             "product_name": tittle, 
+            "product_url": url,
             "product_price": price, 
             "product_availablity": availability,
             "time": ts
-            } 
-    
-    
-        # appending data to emp_details  
+            }     
+            # appending data to emp_details 
         temp.append(y) 
-        write_json(data)
-
+        write_json(data, 'backupData.json')
+        keepUniqueValue()
 
 #Amazon
 def loadAmazon(data):
@@ -50,7 +57,7 @@ def loadAmazon(data):
                 price = 0
             tittle = soup.find(id='productTitle').get_text().strip()
             availability = soup.find(id='availability').get_text().replace(u'\n', u'').strip()
-            addPriceToJSON(data["website"], tittle, price, availability)
+            addPriceToJSON(data["website"], tittle, price, availability, data["url"])
             printData(data["website"], tittle, price, availability)
 
 #Flipkart
@@ -66,7 +73,7 @@ def loadFlipkart(data):
                 price = 0
             tittle = soup.find('span', class_="_35KyD6").get_text().replace(u'\xa0', u' ')
             availability = soup.find('div', class_="_9-sL7L").get_text().strip()
-            addPriceToJSON(data["website"], tittle, price, availability)
+            addPriceToJSON(data["website"], tittle, price, availability, data["url"])
             printData(data["website"], tittle, price, availability)
 
 #Prime abgb
@@ -86,7 +93,7 @@ def loadPrimeAbgb(data):
                 availability = getAvailability.get_text().strip()
             else :
                 availability = "In Stock"
-            addPriceToJSON(data["website"], tittle, price, availability)
+            addPriceToJSON(data["website"], tittle, price, availability, data["url"])
             printData(data["website"], tittle, price, availability)
 
 #Prime abgb
@@ -102,7 +109,7 @@ def loadMdComputers(data):
                 price = 0
             tittle = soup.find('div', class_="title-product").get_text().strip()
             availability = soup.find('div', class_="stock").get_text().replace(u'Availability:  ', u'').strip()
-            addPriceToJSON(data["website"], tittle, price, availability)
+            addPriceToJSON(data["website"], tittle, price, availability, data["url"])
             printData(data["website"], tittle, price, availability)
   
 
