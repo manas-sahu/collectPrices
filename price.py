@@ -14,37 +14,47 @@ def printData(website, tittle, price, availability):
 
 # Creating JSON file
 # function to add to JSON 
-def write_json(data, filename='backupData.json'): 
+def write_json(data, filename): 
     with open(filename,'w') as f: 
         json.dump(data, f, indent=4) 
-def keepUniqueValue():
-    with open('backupData.json') as json_file: 
-        data = json.load(json_file) 
-        temp = list(unique_everseen(data['scrappedPrice']))
-        print(temp)
-        write_json(temp, 'data.json')
-        # with open(data.json,'w') as f: 
-        #     json.dump(temp, f, indent=4) 
+
+# To keep only unique values
+# def keepUniqueValue():
+#     with open('backupData.json') as json_file: 
+#         data = json.load(json_file) 
+#         temp = list(unique_everseen(data['scrappedPrice']))
+#         write_json(temp, 'data.json')
         
 def addPriceToJSON(website, tittle, price, availability, url):      
-    with open('backupData.json') as json_file: 
+    with open('data.json') as json_file: 
         data = json.load(json_file) 
-        temp = data['scrappedPrice']
+        temp = data
         ts = datetime.now().strftime("%x")
         # python object to be appended 
-        y = {"Website": website,
+        y = {
+            "Website": website,
             "product_name": tittle, 
             "product_url": url,
             "product_price": price, 
             "product_availablity": availability,
             "time": ts
-            }     
-            # appending data to emp_details 
-        temp.append(y) 
-        write_json(data, 'backupData.json')
-        keepUniqueValue()
+            }
+        guest_flag = 0
+        for i in range (0, len(temp)):
+            if(temp[i]['Website'] == y['Website'] and 
+            temp[i]['product_name'] == y['product_name'] and 
+            temp[i]['product_url'] == y['product_url'] and 
+            temp[i]['product_price'] == y['product_price'] and 
+            temp[i]['product_availablity'] == y['product_availablity'] and 
+            temp[i]['time'] == y['time']):
+                guest_flag = 1   
+        # appending data to emp_details 
+        if(guest_flag == 0):
+            temp.append(y) 
+            write_json(data, 'data.json')
+            #keepUniqueValue()
 
-#Amazon
+# Amazon
 def loadAmazon(data):
     page = requests.get(data["url"], headers=HEADERS)
     if page.status_code == 200:
@@ -60,7 +70,7 @@ def loadAmazon(data):
             addPriceToJSON(data["website"], tittle, price, availability, data["url"])
             printData(data["website"], tittle, price, availability)
 
-#Flipkart
+# Flipkart
 def loadFlipkart(data):
     page = requests.get(data["url"], headers=HEADERS)
     if page.status_code == 200:
@@ -76,7 +86,7 @@ def loadFlipkart(data):
             addPriceToJSON(data["website"], tittle, price, availability, data["url"])
             printData(data["website"], tittle, price, availability)
 
-#Prime abgb
+# Prime abgb
 def loadPrimeAbgb(data):
     page = requests.get(data["url"], headers=HEADERS)
     if page.status_code == 200:
@@ -96,7 +106,7 @@ def loadPrimeAbgb(data):
             addPriceToJSON(data["website"], tittle, price, availability, data["url"])
             printData(data["website"], tittle, price, availability)
 
-#Prime abgb
+# MD Computers
 def loadMdComputers(data):
     page = requests.get(data["url"], headers=HEADERS)
     if page.status_code == 200:
