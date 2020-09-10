@@ -67,6 +67,8 @@ def loadAmazon(data):
                 price = 0
             tittle = soup.find(id='productTitle').get_text().strip()
             availability = soup.find(id='availability').get_text().replace(u'\n', u'').strip()
+            if availability == "Currently unavailable.We don't know when or if this item will be back in stock.":
+                availability = "Out of Stock"
             addPriceToJSON(data["website"], tittle, price, availability, data["url"])
             printData(data["website"], tittle, price, availability)
 
@@ -83,6 +85,8 @@ def loadFlipkart(data):
                 price = 0
             tittle = soup.find('span', class_="_35KyD6").get_text().replace(u'\xa0', u' ')
             availability = soup.find('div', class_="_9-sL7L").get_text().strip()
+            if availability == "Sold Out":
+                availability = "Out of Stock"
             addPriceToJSON(data["website"], tittle, price, availability, data["url"])
             printData(data["website"], tittle, price, availability)
 
