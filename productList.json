@@ -5,6 +5,10 @@
             "website": "amazon"
         },
         {
+            "url": "https://www.vedantcomputers.com/index.php?route=product/product&product_id=3030",
+            "website": "vedant"
+        },
+        {
             "url": "https://www.flipkart.com/zebronics-max-pro-mechanical-usb-wired-keyboard-gaming/p/itmf3v6n4uaxsnaa",
             "website": "flipkart"
         },
@@ -25,12 +29,20 @@
             "website": "mdcomputers"
         },
         {
+            "url": "https://www.vedantcomputers.com/index.php?route=product/product&path=320_321&product_id=2033",
+            "website": "vedant"
+        },
+        {
             "url": "https://www.primeabgb.com/online-price-reviews-india/cooler-master-mastercase-h500m-mid-tower-case-mcm-h500m-ihnn-s00/",
             "website": "primeabgb"
         },
         {
             "url": "https://www.primeabgb.com/online-price-reviews-india/asus-tuf-gaming-x570-plus-amd-x570-wi-fi-atx-gaming-motherboard/",
             "website": "primeabgb"
+        },
+        {
+            "url": "https://www.vedantcomputers.com/index.php?route=product/product&path=320_328&product_id=2910",
+            "website": "vedant"
         },
         {
             "url": "https://mdcomputers.in/asus-tuf-gaming-x570-plus-wifi.html",

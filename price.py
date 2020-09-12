@@ -126,6 +126,26 @@ def loadMdComputers(data):
             addPriceToJSON(data["website"], tittle, price, availability, data["url"])
             printData(data["website"], tittle, price, availability)
   
+# Vedant Computers
+def loadVedantComputers(data):
+    page = requests.get(data["url"], headers=HEADERS)
+    if page.status_code == 200:
+        soup = BeautifulSoup(page.content, features="lxml")
+        if soup:
+            getPrice = soup.find('div', class_="product-price")
+            if getPrice:
+                price = int(getPrice.get_text().replace(u'₹', u'').replace(u',', u'').strip())
+            else:
+                price = 0
+            tittle = soup.find('div', class_="title page-title").get_text().strip()
+            getAvailability = soup.find('span', class_="product-label product-label-30 product-label-default")
+            if getAvailability:
+                availability = getAvailability.get_text().strip()
+            else:
+                availability = 'In Stock'
+            addPriceToJSON(data["website"], tittle, price, availability, data["url"])
+            printData(data["website"], tittle, price, availability)
+  
 
 json_data_file = open('productList.json')
 list_data = json.load(json_data_file)
@@ -141,3 +161,5 @@ for item in list_data['itemslist']:
         loadPrimeAbgb(item)
     if website == "mdcomputers":
         loadMdComputers(item)
+    if website == "vedant":
+        loadVedantComputers(item)
